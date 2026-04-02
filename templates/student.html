@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+
+    <div class="header">Student Dashboard</div>
+
+    <div class="container">
+        <div class="card" id="data">
+            <h2><i class="fas fa-user"></i> {{ student['name'] }}</h2>
+            
+            <p><strong>Admission Number:</strong> {{ student['admission_number'] }}</p>
+
+            <div class="card">
+                <p><i class="fas fa-book icon"></i> CAT: {{ student['cat_score'] }}</p>
+                <p><i class="fas fa-tasks icon"></i> Assignment: {{ student['assignment_score'] }}</p>
+                <p><i class="fas fa-calendar-check icon"></i> Attendance: {{ student['attendance'] }}</p>
+            </div>
+
+            <div class="card">
+                <p><b>Final Score:</b> {{ final_score }}</p>
+                <p><b>Grade:</b> {{ grade }}</p>
+
+                    {% if status == 'Safe' %}
+                    <p class="safe">
+                    <i class="fas fa-check-circle"></i> {{ status }}
+                    </p>
+                    {% elif status == 'Warning' %}
+                    <p class="warning">
+                    <i class="fas fa-exclamation-triangle"></i> {{ status }}
+                    </p>
+                    {% else %}
+                    <p class="risk">
+                    <i class="fas fa-exclamation-circle"></i> {{ status }}
+                    </p>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="downloadReport()">Download Report</button>
+
+    <script>
+        function logout() {
+            window.location.href = "/logout";
+        }
+    </script>
+
+    <script>
+        function downloadReport() {
+            window.location.href = "/download-report/{{ student['name'] }}";
+        }
+    </script>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+
+            if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+            } else {
+                localStorage.setItem("theme", "light");
+            }
+        }
+
+        window.onload = function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.body.classList.add("dark");
+            }
+        };
+    </script>
+</body>
+</html>

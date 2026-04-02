@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+
+    <div class="header">Lecturer Dashboard</div>
+
+    <div class="card">
+        <h3>Upload Dataset (CSV)</h3>
+        <input type="file" id="file"><br><br>
+        <button onclick="uploadFile()">Upload & Train Model</button>
+    </div>
+
+    <div class="card">
+        <h3>Add Student</h3>
+        <input id="admission_number" placeholder="Admission Number"><br><br>
+        <input id="name" placeholder="Student Name"><br><br>
+        <input id="cat" placeholder="CAT Score" type="number"><br><br>
+        <input id="assignment" placeholder="Assignment Score" type="number"><br><br>
+        <input id="attendance" placeholder="Attendance" type="number"><br><br>
+        <button onclick="addStudent()">Add Student</button>
+    </div>
+
+   <div class="container" id="students">
+    {% for student in students %}
+    <div class="card">
+        <h3>{{ student['name'] }}</h3>
+        <p>Admission Number: {{ student['admission_number'] }}</p>
+        <p>CAT: {{ student['cat_score'] }}</p>
+        <p>Assignment: {{ student['assignment_score'] }}</p>
+        <p>Attendance: {{ student['attendance'] }}</p>
+        <p>Score: {{ student['final_score'] }}</p>
+        <p>Grade: {{ student['grade'] }}</p>
+        <p>Status: {{ student['status'] }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div style="width:80%; margin:40px auto;">
+    <canvas id="performanceChart"></canvas>
+</div>
+
+<script>
+    const studentNames = JSON.parse('{{ students | map(attribute="name") | list | tojson | safe }}');
+    const studentScores = JSON.parse('{{ students | map(attribute="final_score") | list | tojson | safe }}');
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: studentNames,
+            datasets: [{
+                label: 'Final Scores',
+                data: studentScores,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+</script>
+
+    <script>
+        function addStudent() {
+            const admission_number = document.getElementById('admission_number').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const cat = document.getElementById('cat').value;
+            const assignment = document.getElementById('assignment').value;
+            const attendance = document.getElementById('attendance').value;
+
+            fetch('/add-student', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, admission_number, cat, assignment, attendance })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        }
+    </script>
+
+    <script>
+        function logout() {
+            window.location.href = "/logout";
+        }
+    </script>
+
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            fetch('/upload-dataset', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+            });
+        }
+    </script>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+
+            if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+            } else {
+                localStorage.setItem("theme", "light");
+            }
+        }
+
+        window.onload = function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.body.classList.add("dark");
+            }
+        };
+    </script>
+</body>
+</html>

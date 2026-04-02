@@ -1,0 +1,222 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6fb;
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(90deg, #4a6cf7, #6a8dff);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+    background: #4a6cf7;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3a5ce0;
+}
+
+/* STATUS COLORS */
+.safe {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.warning {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.risk {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* FADE IN ANIMATION */
+.card {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* HOVER EFFECT */
+.card:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
+}
+
+/* ICON STYLE */
+.icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #4a6cf7;
+}
+/* 🔴 Logout Button (Top Right) */
+.logout-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    padding: 8px 16px;
+    font-size: 14px;
+
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+/* 🔴 Logout Button */
+.logout-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    padding: 8px 16px;
+    font-size: 14px;
+
+    width: auto;
+    display: inline-block;
+
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+/* 📄 Download Button */
+.download-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    padding: 8px 16px;
+    font-size: 14px;
+
+    width: auto;
+    display: inline-block;
+
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+/* 🌞 Light Mode (default already exists) */
+
+/* 🌙 Dark Mode */
+body.dark {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark .card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark input {
+    background-color: #2c2c2c;
+    color: white;
+    border: 1px solid #555;
+}
+
+body.dark button {
+    opacity: 0.9;
+}
+
+/* 🌙 Toggle Button */
+.toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+
+    padding: 8px 14px;
+    font-size: 13px;
+
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 768px) {
+
+    .container {
+        width: 90%;
+        margin: auto;
+    }
+
+    .card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    h1, h2, h3 {
+        font-size: 18px;
+    }
+}

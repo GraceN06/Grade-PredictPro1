@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+
+    <div class="header">Admin Dashboard</div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Create User</h2>
+            <form action="{{ url_for('add_user') }}" method="POST">
+                <input type="text" name="username" placeholder="Username" required><br><br>
+                <input type="email" name="email" placeholder="Email" required><br><br>
+                <input type="password" name="password" placeholder="Password" required><br><br>
+
+                <select name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="lecturer">Lecturer</option>
+                    <option value="admin">Admin</option>
+                </select><br><br>
+
+                <button type="submit">Create User</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>All Users</h2>
+            <table border="1" cellpadding="10" cellspacing="0" width="100%">
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+
+                {% for user in users %}
+                <tr>
+                    <td>{{ user['username'] }}</td>
+                    <td>{{ user['email'] }}</td>
+                    <td>{{ user['role'] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            window.location.href = "/logout";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+
+            if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+            } else {
+                localStorage.setItem("theme", "light");
+            }
+        }
+
+        window.onload = function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.body.classList.add("dark");
+            }
+        };
+    </script>
+</body>
+</html>
