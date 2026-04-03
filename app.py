@@ -12,55 +12,54 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = Path(os.environ.get("DATA_DIR", BASE_DIR / "data"))
-UPLOAD_DIR = DATA_DIR / "uploads"
-DB_PATH = DATA_DIR / "students.db"
+UPLOAD_DIR = BASE_DIR / "uploads"
+DB_PATH = BASE_DIR / "students.db"
 
-DATA_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 model = joblib.load('model.pkl')
 
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        email TEXT,
-        password TEXT,
-        role TEXT
-    )
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE,
+            email TEXT,
+            password TEXT,
+            role TEXT
+        )
     """)
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS students (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        cat_score REAL,
-        assignment_score REAL,
-        attendance REAL,
-        predicted_grade TEXT,
-        lecturer_username TEXT
-    )
+        CREATE TABLE IF NOT EXISTS students (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            admission_number TEXT,
+            cat_score REAL,
+            assignment_score REAL,
+            attendance REAL,
+            predicted_grade TEXT,
+            lecturer_username TEXT
+        )
     """)
 
-    cursor.execute("SELECT * FROM users WHERE username = ?", ('admin',))
+    cursor.execute("SELECT * FROM users WHERE username = ?", ("admin",))
     existing_user = cursor.fetchone()
 
     if not existing_user:
         cursor.execute("""
             INSERT INTO users (username, email, password, role)
             VALUES (?, ?, ?, ?)
-        """, ('admin', 'admin@gmail.com', '1234', 'admin'))
+        """, ("admin", "admin@gmail.com", "1234", "admin"))
 
     conn.commit()
     conn.close()
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -81,6 +80,8 @@ def test_login():
 # Run app
 @app.route('/login', methods=['POST'])
 def login():
+    init_db()
+    
     username = request.form['username'].strip()
     password = request.form['password'].strip()
     expected_role = request.form['role'].strip().lower()
