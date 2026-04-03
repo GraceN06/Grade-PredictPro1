@@ -220,7 +220,7 @@ def lecturer_dashboard():
         attendance = row['attendance']
 
         predicted_score = model.predict([[cat, assignment, attendance]])
-        final_score = int(round(predicted_score[0]))
+        final_score = min(int(round(predicted_score[0])), 100)
 
         if final_score >= 70:
             grade = "A"
@@ -261,7 +261,7 @@ def add_student():
     attendance = float(data['attendance'])
 
     predicted_score = model.predict([[cat, assignment, attendance]])
-    final_score = round(predicted_score[0], 1)
+    final_score = min(round(predicted_score[0], 1), 100)
 
     if final_score >= 70:
         grade = "A"
