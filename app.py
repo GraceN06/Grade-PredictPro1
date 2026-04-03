@@ -22,7 +22,7 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 model = joblib.load('model.pkl')
 
 def init_db():
-    conn = sqlite3.connect('students.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -485,6 +485,6 @@ def admin_login():
     return f"Added {added} missing student user(s)"
 
     init_db()
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
