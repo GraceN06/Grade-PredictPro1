@@ -2,13 +2,15 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: #f4f6fb;
     margin: 0;
+    color: #222;
 }
 
 /* HEADER */
 .header {
+    position: relative;
     background: linear-gradient(90deg, #4a6cf7, #6a8dff);
     color: white;
-    padding: 20px;
+    padding: 20px 70px;
     text-align: center;
     font-size: 22px;
     font-weight: bold;
@@ -28,6 +30,7 @@ body {
     padding: 20px;
     margin-top: 20px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease-in-out;
 }
 
 /* INPUTS */
@@ -36,9 +39,10 @@ input {
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
-/* BUTTON */
+/* GENERAL BUTTON */
 button {
     background: #4a6cf7;
     color: white;
@@ -69,22 +73,6 @@ button:hover {
     font-weight: bold;
 }
 
-/* FADE IN ANIMATION */
-.card {
-    animation: fadeIn 0.6s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* HOVER EFFECT */
 .card:hover {
     transform: translateY(-5px);
@@ -97,66 +85,48 @@ button:hover {
     margin-right: 8px;
     color: #4a6cf7;
 }
-/* 🔴 Logout Button (Top Right) */
+
+/* LOGOUT BUTTON */
 .logout-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-
-    padding: 8px 16px;
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    padding: 8px 14px;
     font-size: 14px;
-
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-
-    cursor: pointer;
-}
-
-/* 🔴 Logout Button */
-.logout-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-
-    padding: 8px 16px;
-    font-size: 14px;
-
     width: auto;
     display: inline-block;
-
     background-color: #e74c3c;
     color: white;
     border: none;
     border-radius: 6px;
-
     cursor: pointer;
 }
 
-/* 📄 Download Button */
+.logout-btn:hover {
+    background-color: #c0392b;
+}
+
+/* DOWNLOAD BUTTON */
 .download-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
-
     padding: 8px 16px;
     font-size: 14px;
-
     width: auto;
     display: inline-block;
-
     background-color: #3498db;
     color: white;
     border: none;
     border-radius: 6px;
-
     cursor: pointer;
 }
 
-/* 🌞 Light Mode (default already exists) */
+.download-btn:hover {
+    background-color: #2980b9;
+}
 
-/* 🌙 Dark Mode */
+/* DARK MODE */
 body.dark {
     background-color: #121212;
     color: #ffffff;
@@ -173,33 +143,71 @@ body.dark input {
     border: 1px solid #555;
 }
 
-body.dark button {
-    opacity: 0.9;
+body.dark .header {
+    color: white;
 }
 
-/* 🌙 Toggle Button */
+body.dark button {
+    opacity: 0.95;
+}
+
+/* TOGGLE BUTTON */
 .toggle-btn {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-
-    padding: 8px 14px;
-    font-size: 13px;
-
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    padding: 8px 12px;
+    font-size: 14px;
+    width: auto;
+    display: inline-block;
     background-color: #333;
     color: white;
     border: none;
     border-radius: 6px;
-
     cursor: pointer;
 }
 
-/* 📱 Mobile Responsive */
+.toggle-btn:hover {
+    background-color: #222;
+}
+
+/* FADE IN ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
+    .header {
+        font-size: 20px;
+        padding: 18px 60px;
+    }
+
+    .toggle-btn {
+        top: 10px;
+        left: 10px;
+        font-size: 13px;
+        padding: 7px 10px;
+    }
+
+    .logout-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 13px;
+        padding: 7px 10px;
+    }
 
     .container {
         width: 90%;
         margin: auto;
+        padding: 15px;
     }
 
     .card {
@@ -212,11 +220,14 @@ body.dark button {
         margin-bottom: 10px;
     }
 
-    button {
-        width: 100%;
-    }
-
     h1, h2, h3 {
         font-size: 18px;
+    }
+
+    .download-btn {
+        bottom: 15px;
+        right: 15px;
+        font-size: 13px;
+        padding: 8px 12px;
     }
 }
