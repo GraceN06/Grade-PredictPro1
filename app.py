@@ -483,6 +483,8 @@ def admin_login():
     return render_template('admin_login.html')
 
     return f"Added {added} missing student user(s)"
-if __name__ == '__main__':
+
     init_db()
+    
+if __name__ == '__main__':
     app.run(debug=True)
