@@ -5,81 +5,200 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <div class="header">
-    <button class="logout-btn" onclick="logout()">Logout</button>
-    Student Dashboard
-    <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
-    </div>
 
-    
+    <div class="header">
+        <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+        Student Dashboard
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <button class="download-btn" onclick="downloadReport()">Download Report</button>
+    </div>
 
     <div class="container">
-        <div class="card" id="data">
-            <h2><i class="fas fa-user"></i> {{ student['name'] }}</h2>
-            
+
+        <div class="card">
+            <h2>{{ student['name'] }}</h2>
             <p><strong>Admission Number:</strong> {{ student['admission_number'] }}</p>
-
-            <div class="card">
-                <p><i class="fas fa-book icon"></i> CAT: {{ student['cat_score'] }}</p>
-                <p><i class="fas fa-tasks icon"></i> Assignment: {{ student['assignment_score'] }}</p>
-                <p><i class="fas fa-calendar-check icon"></i> Attendance: {{ student['attendance'] }}</p>
-            </div>
-
-            <div class="card">
-                <p><b>Final Score:</b> {{ final_score }}</p>
-                <p><b>Grade:</b> {{ grade }}</p>
-
-                    {% if status == 'Safe' %}
-                    <p class="safe">
-                    <i class="fas fa-check-circle"></i> {{ status }}
-                    </p>
-                    {% elif status == 'Warning' %}
-                    <p class="warning">
-                    <i class="fas fa-exclamation-triangle"></i> {{ status }}
-                    </p>
-                    {% else %}
-                    <p class="risk">
-                    <i class="fas fa-exclamation-circle"></i> {{ status }}
-                    </p>
-                    {% endif %}
-            </div>
         </div>
-    </div>
 
-    <button class="download-btn" onclick="downloadReport()">Download Report</button>
+        <div class="card">
+            <h3>Form 1 Scores</h3>
+            <table class="score-table">
+                <tr>
+                    <th>Subject</th>
+                    <th>Term 1</th>
+                    <th>Term 2</th>
+                    <th>Term 3</th>
+                    <th>Average</th>
+                </tr>
+                <tr><td>Math</td><td>{{ student['f1_math_t1'] }}</td><td>{{ student['f1_math_t2'] }}</td><td>{{ student['f1_math_t3'] }}</td><td>{{ student['f1_math_avg'] }}</td></tr>
+                <tr><td>English</td><td>{{ student['f1_english_t1'] }}</td><td>{{ student['f1_english_t2'] }}</td><td>{{ student['f1_english_t3'] }}</td><td>{{ student['f1_english_avg'] }}</td></tr>
+                <tr><td>Biology</td><td>{{ student['f1_biology_t1'] }}</td><td>{{ student['f1_biology_t2'] }}</td><td>{{ student['f1_biology_t3'] }}</td><td>{{ student['f1_biology_avg'] }}</td></tr>
+                <tr><td>Chemistry</td><td>{{ student['f1_chemistry_t1'] }}</td><td>{{ student['f1_chemistry_t2'] }}</td><td>{{ student['f1_chemistry_t3'] }}</td><td>{{ student['f1_chemistry_avg'] }}</td></tr>
+                <tr><td>Physics</td><td>{{ student['f1_physics_t1'] }}</td><td>{{ student['f1_physics_t2'] }}</td><td>{{ student['f1_physics_t3'] }}</td><td>{{ student['f1_physics_avg'] }}</td></tr>
+                <tr><td>History</td><td>{{ student['f1_history_t1'] }}</td><td>{{ student['f1_history_t2'] }}</td><td>{{ student['f1_history_t3'] }}</td><td>{{ student['f1_history_avg'] }}</td></tr>
+                <tr><td>Geography</td><td>{{ student['f1_geography_t1'] }}</td><td>{{ student['f1_geography_t2'] }}</td><td>{{ student['f1_geography_t3'] }}</td><td>{{ student['f1_geography_avg'] }}</td></tr>
+                <tr><td>Business</td><td>{{ student['f1_business_t1'] }}</td><td>{{ student['f1_business_t2'] }}</td><td>{{ student['f1_business_t3'] }}</td><td>{{ student['f1_business_avg'] }}</td></tr>
+            </table>
+
+            <table class="score-table">
+                <tr>
+                    <th>Term 1 Total</th>
+                    <th>Term 2 Total</th>
+                    <th>Term 3 Total</th>
+                    <th>Form Average</th>
+                </tr>
+                <tr>
+                    <td>{{ f1_t1_total }}/800</td>
+                    <td>{{ f1_t2_total }}/800</td>
+                    <td>{{ f1_t3_total }}/800</td>
+                    <td>{{ f1_avg }}%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Form 2 Scores</h3>
+            <table class="score-table">
+                <tr>
+                    <th>Subject</th>
+                    <th>Term 1</th>
+                    <th>Term 2</th>
+                    <th>Term 3</th>
+                    <th>Average</th>
+                </tr>
+                <tr><td>Math</td><td>{{ student['f2_math_t1'] }}</td><td>{{ student['f2_math_t2'] }}</td><td>{{ student['f2_math_t3'] }}</td><td>{{ student['f2_math_avg'] }}</td></tr>
+                <tr><td>English</td><td>{{ student['f2_english_t1'] }}</td><td>{{ student['f2_english_t2'] }}</td><td>{{ student['f2_english_t3'] }}</td><td>{{ student['f2_english_avg'] }}</td></tr>
+                <tr><td>Biology</td><td>{{ student['f2_biology_t1'] }}</td><td>{{ student['f2_biology_t2'] }}</td><td>{{ student['f2_biology_t3'] }}</td><td>{{ student['f2_biology_avg'] }}</td></tr>
+                <tr><td>Chemistry</td><td>{{ student['f2_chemistry_t1'] }}</td><td>{{ student['f2_chemistry_t2'] }}</td><td>{{ student['f2_chemistry_t3'] }}</td><td>{{ student['f2_chemistry_avg'] }}</td></tr>
+                <tr><td>Physics</td><td>{{ student['f2_physics_t1'] }}</td><td>{{ student['f2_physics_t2'] }}</td><td>{{ student['f2_physics_t3'] }}</td><td>{{ student['f2_physics_avg'] }}</td></tr>
+                <tr><td>History</td><td>{{ student['f2_history_t1'] }}</td><td>{{ student['f2_history_t2'] }}</td><td>{{ student['f2_history_t3'] }}</td><td>{{ student['f2_history_avg'] }}</td></tr>
+                <tr><td>Geography</td><td>{{ student['f2_geography_t1'] }}</td><td>{{ student['f2_geography_t2'] }}</td><td>{{ student['f2_geography_t3'] }}</td><td>{{ student['f2_geography_avg'] }}</td></tr>
+                <tr><td>Business</td><td>{{ student['f2_business_t1'] }}</td><td>{{ student['f2_business_t2'] }}</td><td>{{ student['f2_business_t3'] }}</td><td>{{ student['f2_business_avg'] }}</td></tr>
+            </table>
+
+            <table class="score-table">
+                <tr>
+                    <th>Term 1 Total</th>
+                    <th>Term 2 Total</th>
+                    <th>Term 3 Total</th>
+                    <th>Form Average</th>
+                </tr>
+                <tr>
+                    <td>{{ f2_t1_total }}/800</td>
+                    <td>{{ f2_t2_total }}/800</td>
+                    <td>{{ f2_t3_total }}/800</td>
+                    <td>{{ f2_avg }}%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Form 3 Scores</h3>
+            <table class="score-table">
+                <tr>
+                    <th>Subject</th>
+                    <th>Term 1</th>
+                    <th>Term 2</th>
+                    <th>Term 3</th>
+                    <th>Average</th>
+                </tr>
+                <tr><td>Math</td><td>{{ student['f3_math_t1'] }}</td><td>{{ student['f3_math_t2'] }}</td><td>{{ student['f3_math_t3'] }}</td><td>{{ student['f3_math_avg'] }}</td></tr>
+                <tr><td>English</td><td>{{ student['f3_english_t1'] }}</td><td>{{ student['f3_english_t2'] }}</td><td>{{ student['f3_english_t3'] }}</td><td>{{ student['f3_english_avg'] }}</td></tr>
+                <tr><td>Biology</td><td>{{ student['f3_biology_t1'] }}</td><td>{{ student['f3_biology_t2'] }}</td><td>{{ student['f3_biology_t3'] }}</td><td>{{ student['f3_biology_avg'] }}</td></tr>
+                <tr><td>Chemistry</td><td>{{ student['f3_chemistry_t1'] }}</td><td>{{ student['f3_chemistry_t2'] }}</td><td>{{ student['f3_chemistry_t3'] }}</td><td>{{ student['f3_chemistry_avg'] }}</td></tr>
+                <tr><td>Physics</td><td>{{ student['f3_physics_t1'] }}</td><td>{{ student['f3_physics_t2'] }}</td><td>{{ student['f3_physics_t3'] }}</td><td>{{ student['f3_physics_avg'] }}</td></tr>
+                <tr><td>History</td><td>{{ student['f3_history_t1'] }}</td><td>{{ student['f3_history_t2'] }}</td><td>{{ student['f3_history_t3'] }}</td><td>{{ student['f3_history_avg'] }}</td></tr>
+                <tr><td>Geography</td><td>{{ student['f3_geography_t1'] }}</td><td>{{ student['f3_geography_t2'] }}</td><td>{{ student['f3_geography_t3'] }}</td><td>{{ student['f3_geography_avg'] }}</td></tr>
+                <tr><td>Business</td><td>{{ student['f3_business_t1'] }}</td><td>{{ student['f3_business_t2'] }}</td><td>{{ student['f3_business_t3'] }}</td><td>{{ student['f3_business_avg'] }}</td></tr>
+            </table>
+
+            <table class="score-table">
+                <tr>
+                    <th>Term 1 Total</th>
+                    <th>Term 2 Total</th>
+                    <th>Term 3 Total</th>
+                    <th>Form Average</th>
+                </tr>
+                <tr>
+                    <td>{{ f3_t1_total }}/800</td>
+                    <td>{{ f3_t2_total }}/800</td>
+                    <td>{{ f3_t3_total }}/800</td>
+                    <td>{{ f3_avg }}%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Form 4 Scores</h3>
+            <table class="score-table">
+                <tr>
+                    <th>Subject</th>
+                    <th>Term 1</th>
+                    <th>Term 2</th>
+                    <th>Term 3</th>
+                    <th>Average</th>
+                </tr>
+                <tr><td>Math</td><td>{{ student['f4_math_t1'] }}</td><td>{{ student['f4_math_t2'] }}</td><td>{{ student['f4_math_t3'] }}</td><td>{{ student['f4_math_avg'] }}</td></tr>
+                <tr><td>English</td><td>{{ student['f4_english_t1'] }}</td><td>{{ student['f4_english_t2'] }}</td><td>{{ student['f4_english_t3'] }}</td><td>{{ student['f4_english_avg'] }}</td></tr>
+                <tr><td>Biology</td><td>{{ student['f4_biology_t1'] }}</td><td>{{ student['f4_biology_t2'] }}</td><td>{{ student['f4_biology_t3'] }}</td><td>{{ student['f4_biology_avg'] }}</td></tr>
+                <tr><td>Chemistry</td><td>{{ student['f4_chemistry_t1'] }}</td><td>{{ student['f4_chemistry_t2'] }}</td><td>{{ student['f4_chemistry_t3'] }}</td><td>{{ student['f4_chemistry_avg'] }}</td></tr>
+                <tr><td>Physics</td><td>{{ student['f4_physics_t1'] }}</td><td>{{ student['f4_physics_t2'] }}</td><td>{{ student['f4_physics_t3'] }}</td><td>{{ student['f4_physics_avg'] }}</td></tr>
+                <tr><td>History</td><td>{{ student['f4_history_t1'] }}</td><td>{{ student['f4_history_t2'] }}</td><td>{{ student['f4_history_t3'] }}</td><td>{{ student['f4_history_avg'] }}</td></tr>
+                <tr><td>Geography</td><td>{{ student['f4_geography_t1'] }}</td><td>{{ student['f4_geography_t2'] }}</td><td>{{ student['f4_geography_t3'] }}</td><td>{{ student['f4_geography_avg'] }}</td></tr>
+                <tr><td>Business</td><td>{{ student['f4_business_t1'] }}</td><td>{{ student['f4_business_t2'] }}</td><td>{{ student['f4_business_t3'] }}</td><td>{{ student['f4_business_avg'] }}</td></tr>
+            </table>
+
+            <table class="score-table">
+                <tr>
+                    <th>Term 1 Total</th>
+                    <th>Term 2 Total</th>
+                    <th>Term 3 Total</th>
+                    <th>Form Average</th>
+                </tr>
+                <tr>
+                    <td>{{ f4_t1_total }}/800</td>
+                    <td>{{ f4_t2_total }}/800</td>
+                    <td>{{ f4_t3_total }}/800</td>
+                    <td>{{ f4_avg }}%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Prediction Summary</h3>
+            <table class="score-table">
+                <tr>
+                    <th>Predicted Final Score</th>
+                    <th>Predicted Grade</th>
+                    <th>Risk Status</th>
+                </tr>
+                <tr>
+                    <td>{{ student['predicted_score'] }}</td>
+                    <td>{{ student['predicted_grade'] }}</td>
+                    <td>{{ status }}</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
 
     <script>
         function logout() {
             window.location.href = "/logout";
         }
-    </script>
 
-    <script>
-        function downloadReport() {
-            window.location.href = "/download-report/{{ student['name'] }}";
-        }
-    </script>
-
-    <script>
         function toggleDarkMode() {
             document.body.classList.toggle("dark");
-
-            if (document.body.classList.contains("dark")) {
-                localStorage.setItem("theme", "dark");
-            } else {
-                localStorage.setItem("theme", "light");
-            }
         }
 
-        window.onload = function () {
-            const theme = localStorage.getItem("theme");
-            if (theme === "dark") {
-                document.body.classList.add("dark");
-            }
-        };
+        function downloadReport() {
+            window.location.href = "/download-report/{{ student['admission_number'] }}";
+        }
+
     </script>
+
 </body>
 </html>

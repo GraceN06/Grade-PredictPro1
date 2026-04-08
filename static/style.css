@@ -233,3 +233,97 @@ body.dark button {
         padding: 8px 12px;
     }
 }
+
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.score-table th,
+.score-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.score-table th {
+    background: #4a6cf7;
+    color: white;
+}
+
+.score-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+body.dark .score-table {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark .score-table th {
+    background-color: #333;
+    color: white;
+}
+
+body.dark .score-table td {
+    border: 1px solid #555;
+}
+
+body.dark .score-table tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.collapsible {
+    background-color: #4a6cf7;
+    color: white;
+    cursor: pointer;
+    padding: 12px 16px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.collapsible:hover {
+    background-color: #3a5ce0;
+}
+
+.collapsible-content {
+    display: none;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.collapsible.active {
+    background-color: #2f55d4;
+}
+
+body.dark .collapsible {
+    background-color: #333;
+    color: white;
+}
+
+body.dark .collapsible:hover {
+    background-color: #444;
+}
+
+.collapsible::after {
+    content: '+';
+    float: right;
+    font-weight: bold;
+}
+
+.collapsible.active::after {
+    content: '-';
+}
