@@ -5,7 +5,6 @@ from sklearn.linear_model import LinearRegression
 # Load dataset
 df = pd.read_csv("students_academic_history.csv")
 
-# Features
 X = df[
     [
         'f1_math_avg', 'f1_english_avg', 'f1_biology_avg', 'f1_chemistry_avg',

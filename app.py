@@ -1360,6 +1360,131 @@ def download_report(admission_number):
 
     return send_file(filename, as_attachment=True)
 
+@app.route('/predict-from-record')
+def predict_from_record_page():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    return render_template('predict_from_record.html')
+
+@app.route('/predict-from-record-data', methods=['POST'])
+def predict_from_record_data():
+    if 'username' not in session:
+        return jsonify({"message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    admission_number = data.get('admission_number', '').strip()
+
+    if not admission_number:
+        return jsonify({"message": "Admission number is required"}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM students WHERE admission_number = ?",
+            (admission_number,)
+        )
+        student = cursor.fetchone()
+        conn.close()
+
+        if not student:
+            return jsonify({"message": "Student record not found"}), 404
+
+        input_data = pd.DataFrame(
+            [[
+                student['f1_math_avg'], student['f1_english_avg'], student['f1_biology_avg'], student['f1_chemistry_avg'],
+                student['f1_physics_avg'], student['f1_history_avg'], student['f1_geography_avg'], student['f1_business_avg'],
+
+                student['f2_math_avg'], student['f2_english_avg'], student['f2_biology_avg'], student['f2_chemistry_avg'],
+                student['f2_physics_avg'], student['f2_history_avg'], student['f2_geography_avg'], student['f2_business_avg'],
+
+                student['f3_math_avg'], student['f3_english_avg'], student['f3_biology_avg'], student['f3_chemistry_avg'],
+                student['f3_physics_avg'], student['f3_history_avg'], student['f3_geography_avg'], student['f3_business_avg'],
+
+                student['f4_math_avg'], student['f4_english_avg'], student['f4_biology_avg'], student['f4_chemistry_avg'],
+                student['f4_physics_avg'], student['f4_history_avg'], student['f4_geography_avg'], student['f4_business_avg']
+            ]],
+            columns=[
+                'f1_math_avg', 'f1_english_avg', 'f1_biology_avg', 'f1_chemistry_avg',
+                'f1_physics_avg', 'f1_history_avg', 'f1_geography_avg', 'f1_business_avg',
+
+                'f2_math_avg', 'f2_english_avg', 'f2_biology_avg', 'f2_chemistry_avg',
+                'f2_physics_avg', 'f2_history_avg', 'f2_geography_avg', 'f2_business_avg',
+
+                'f3_math_avg', 'f3_english_avg', 'f3_biology_avg', 'f3_chemistry_avg',
+                'f3_physics_avg', 'f3_history_avg', 'f3_geography_avg', 'f3_business_avg',
+
+                'f4_math_avg', 'f4_english_avg', 'f4_biology_avg', 'f4_chemistry_avg',
+                'f4_physics_avg', 'f4_history_avg', 'f4_geography_avg', 'f4_business_avg'
+            ]
+        )
+
+        predicted_score = model.predict(input_data)
+        final_score = min(round(float(predicted_score[0]), 1), 100)
+
+        if final_score >= 80:
+            predicted_grade = "A"
+            risk_status = "Safe"
+        elif final_score >= 50:
+            predicted_grade = "B"
+            risk_status = "Warning"
+        else:
+            predicted_grade = "C"
+            risk_status = "At Risk"
+
+        return jsonify({
+            "message": "Prediction generated successfully",
+            "student": {
+                "name": student["name"],
+                "admission_number": student["admission_number"],
+
+                "f1_math_avg": student["f1_math_avg"],
+                "f1_english_avg": student["f1_english_avg"],
+                "f1_biology_avg": student["f1_biology_avg"],
+                "f1_chemistry_avg": student["f1_chemistry_avg"],
+                "f1_physics_avg": student["f1_physics_avg"],
+                "f1_history_avg": student["f1_history_avg"],
+                "f1_geography_avg": student["f1_geography_avg"],
+                "f1_business_avg": student["f1_business_avg"],
+
+                "f2_math_avg": student["f2_math_avg"],
+                "f2_english_avg": student["f2_english_avg"],
+                "f2_biology_avg": student["f2_biology_avg"],
+                "f2_chemistry_avg": student["f2_chemistry_avg"],
+                "f2_physics_avg": student["f2_physics_avg"],
+                "f2_history_avg": student["f2_history_avg"],
+                "f2_geography_avg": student["f2_geography_avg"],
+                "f2_business_avg": student["f2_business_avg"],
+
+                "f3_math_avg": student["f3_math_avg"],
+                "f3_english_avg": student["f3_english_avg"],
+                "f3_biology_avg": student["f3_biology_avg"],
+                "f3_chemistry_avg": student["f3_chemistry_avg"],
+                "f3_physics_avg": student["f3_physics_avg"],
+                "f3_history_avg": student["f3_history_avg"],
+                "f3_geography_avg": student["f3_geography_avg"],
+                "f3_business_avg": student["f3_business_avg"],
+
+                "f4_math_avg": student["f4_math_avg"],
+                "f4_english_avg": student["f4_english_avg"],
+                "f4_biology_avg": student["f4_biology_avg"],
+                "f4_chemistry_avg": student["f4_chemistry_avg"],
+                "f4_physics_avg": student["f4_physics_avg"],
+                "f4_history_avg": student["f4_history_avg"],
+                "f4_geography_avg": student["f4_geography_avg"],
+                "f4_business_avg": student["f4_business_avg"],
+
+                "predicted_score": final_score,
+                "predicted_grade": predicted_grade,
+                "risk_status": risk_status
+            }
+        })
+
+    except Exception as e:
+        return jsonify({"message": f"Error: {str(e)}"}), 500
+
 @app.route('/create-user/<username>/<email>/<password>/<role>')
 def create_user(username, email, password, role):
     conn = get_db_connection()

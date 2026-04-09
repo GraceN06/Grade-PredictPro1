@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict From Existing Record</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="header">
+        <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+        Predict From Existing Student Record
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3>Enter Admission Number</h3>
+            <input id="search_admission_number" type="text" placeholder="Admission Number">
+            <br><br>
+            <button onclick="predictFromRecord()">Predict</button>
+            <p id="statusMessage"></p>
+        </div>
+
+        <div class="card" id="resultCard" style="display: none;">
+            <h3>Prediction Result</h3>
+            <p><strong>Name:</strong> <span id="student_name"></span></p>
+            <p><strong>Admission Number:</strong> <span id="student_admission"></span></p>
+
+            <h4>Form 1 Averages</h4>
+            <table class="score-table">
+                <tr><th>Math</th><th>English</th><th>Biology</th><th>Chemistry</th><th>Physics</th><th>History</th><th>Geography</th><th>Business</th></tr>
+                <tr>
+                    <td id="f1_math_avg"></td><td id="f1_english_avg"></td><td id="f1_biology_avg"></td><td id="f1_chemistry_avg"></td>
+                    <td id="f1_physics_avg"></td><td id="f1_history_avg"></td><td id="f1_geography_avg"></td><td id="f1_business_avg"></td>
+                </tr>
+            </table>
+
+            <h4>Form 2 Averages</h4>
+            <table class="score-table">
+                <tr><th>Math</th><th>English</th><th>Biology</th><th>Chemistry</th><th>Physics</th><th>History</th><th>Geography</th><th>Business</th></tr>
+                <tr>
+                    <td id="f2_math_avg"></td><td id="f2_english_avg"></td><td id="f2_biology_avg"></td><td id="f2_chemistry_avg"></td>
+                    <td id="f2_physics_avg"></td><td id="f2_history_avg"></td><td id="f2_geography_avg"></td><td id="f2_business_avg"></td>
+                </tr>
+            </table>
+
+            <h4>Form 3 Averages</h4>
+            <table class="score-table">
+                <tr><th>Math</th><th>English</th><th>Biology</th><th>Chemistry</th><th>Physics</th><th>History</th><th>Geography</th><th>Business</th></tr>
+                <tr>
+                    <td id="f3_math_avg"></td><td id="f3_english_avg"></td><td id="f3_biology_avg"></td><td id="f3_chemistry_avg"></td>
+                    <td id="f3_physics_avg"></td><td id="f3_history_avg"></td><td id="f3_geography_avg"></td><td id="f3_business_avg"></td>
+                </tr>
+            </table>
+
+            <h4>Form 4 Averages</h4>
+            <table class="score-table">
+                <tr><th>Math</th><th>English</th><th>Biology</th><th>Chemistry</th><th>Physics</th><th>History</th><th>Geography</th><th>Business</th></tr>
+                <tr>
+                    <td id="f4_math_avg"></td><td id="f4_english_avg"></td><td id="f4_biology_avg"></td><td id="f4_chemistry_avg"></td>
+                    <td id="f4_physics_avg"></td><td id="f4_history_avg"></td><td id="f4_geography_avg"></td><td id="f4_business_avg"></td>
+                </tr>
+            </table>
+
+            <h4>Prediction Summary</h4>
+            <table class="score-table">
+                <tr><th>Predicted Final Score</th><th>Predicted Grade</th><th>Risk Status</th></tr>
+                <tr>
+                    <td id="predicted_score"></td>
+                    <td id="predicted_grade"></td>
+                    <td id="risk_status"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            window.location.href = "/logout";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+        }
+
+        function predictFromRecord() {
+            const admissionNumber = document.getElementById("search_admission_number").value.trim();
+            const statusMessage = document.getElementById("statusMessage");
+            const resultCard = document.getElementById("resultCard");
+
+            if (!admissionNumber) {
+                statusMessage.innerText = "Please enter an admission number.";
+                statusMessage.style.color = "red";
+                resultCard.style.display = "none";
+                return;
+            }
+
+            fetch("/predict-from-record-data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    admission_number: admissionNumber
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (!result.student) {
+                    statusMessage.innerText = result.message;
+                    statusMessage.style.color = "red";
+                    resultCard.style.display = "none";
+                    return;
+                }
+
+                const s = result.student;
+
+                statusMessage.innerText = result.message;
+                statusMessage.style.color = "green";
+                resultCard.style.display = "block";
+
+                document.getElementById("student_name").innerText = s.name;
+                document.getElementById("student_admission").innerText = s.admission_number;
+
+                document.getElementById("f1_math_avg").innerText = s.f1_math_avg;
+                document.getElementById("f1_english_avg").innerText = s.f1_english_avg;
+                document.getElementById("f1_biology_avg").innerText = s.f1_biology_avg;
+                document.getElementById("f1_chemistry_avg").innerText = s.f1_chemistry_avg;
+                document.getElementById("f1_physics_avg").innerText = s.f1_physics_avg;
+                document.getElementById("f1_history_avg").innerText = s.f1_history_avg;
+                document.getElementById("f1_geography_avg").innerText = s.f1_geography_avg;
+                document.getElementById("f1_business_avg").innerText = s.f1_business_avg;
+
+                document.getElementById("f2_math_avg").innerText = s.f2_math_avg;
+                document.getElementById("f2_english_avg").innerText = s.f2_english_avg;
+                document.getElementById("f2_biology_avg").innerText = s.f2_biology_avg;
+                document.getElementById("f2_chemistry_avg").innerText = s.f2_chemistry_avg;
+                document.getElementById("f2_physics_avg").innerText = s.f2_physics_avg;
+                document.getElementById("f2_history_avg").innerText = s.f2_history_avg;
+                document.getElementById("f2_geography_avg").innerText = s.f2_geography_avg;
+                document.getElementById("f2_business_avg").innerText = s.f2_business_avg;
+
+                document.getElementById("f3_math_avg").innerText = s.f3_math_avg;
+                document.getElementById("f3_english_avg").innerText = s.f3_english_avg;
+                document.getElementById("f3_biology_avg").innerText = s.f3_biology_avg;
+                document.getElementById("f3_chemistry_avg").innerText = s.f3_chemistry_avg;
+                document.getElementById("f3_physics_avg").innerText = s.f3_physics_avg;
+                document.getElementById("f3_history_avg").innerText = s.f3_history_avg;
+                document.getElementById("f3_geography_avg").innerText = s.f3_geography_avg;
+                document.getElementById("f3_business_avg").innerText = s.f3_business_avg;
+
+                document.getElementById("f4_math_avg").innerText = s.f4_math_avg;
+                document.getElementById("f4_english_avg").innerText = s.f4_english_avg;
+                document.getElementById("f4_biology_avg").innerText = s.f4_biology_avg;
+                document.getElementById("f4_chemistry_avg").innerText = s.f4_chemistry_avg;
+                document.getElementById("f4_physics_avg").innerText = s.f4_physics_avg;
+                document.getElementById("f4_history_avg").innerText = s.f4_history_avg;
+                document.getElementById("f4_geography_avg").innerText = s.f4_geography_avg;
+                document.getElementById("f4_business_avg").innerText = s.f4_business_avg;
+
+                document.getElementById("predicted_score").innerText = s.predicted_score;
+                document.getElementById("predicted_grade").innerText = s.predicted_grade;
+                document.getElementById("risk_status").innerText = s.risk_status;
+            })
+            .catch(error => {
+                statusMessage.innerText = "Error generating prediction.";
+                statusMessage.style.color = "red";
+                resultCard.style.display = "none";
+                console.error(error);
+            });
+        }
+    </script>
+
+</body>
+</html>
