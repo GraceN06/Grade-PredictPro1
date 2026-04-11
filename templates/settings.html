@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="header">
+        <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+        System Settings
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h3>Account Information</h3>
+            <p><strong>Username:</strong> {{ user['username'] }}</p>
+            <p><strong>Email:</strong> {{ user['email'] }}</p>
+            <p><strong>Role:</strong> {{ user['role'] }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Change Password</h3>
+
+            <input type="password" id="current_password" placeholder="Current Password"><br><br>
+            <input type="password" id="new_password" placeholder="New Password"><br><br>
+            <input type="password" id="confirm_password" placeholder="Confirm New Password"><br><br>
+
+            <button onclick="changePassword()">Update Password</button>
+            <button type="button" onclick="goBack()">Back</button>
+
+            <p id="settingsMessage" style="margin-top: 15px; font-weight: bold;"></p>
+        </div>
+
+    </div>
+
+    <script>
+        function logout() {
+            window.location.href = "/logout";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function changePassword() {
+            const current_password = document.getElementById("current_password").value;
+            const new_password = document.getElementById("new_password").value;
+            const confirm_password = document.getElementById("confirm_password").value;
+            const msg = document.getElementById("settingsMessage");
+
+            fetch("/update-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    current_password,
+                    new_password,
+                    confirm_password
+                })
+            })
+            .then(async response => {
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || "Failed");
+                }
+                return result;
+            })
+            .then(result => {
+                msg.innerText = result.message;
+                msg.style.color = "lightgreen";
+
+                document.getElementById("current_password").value = "";
+                document.getElementById("new_password").value = "";
+                document.getElementById("confirm_password").value = "";
+            })
+            .catch(error => {
+                msg.innerText = error.message;
+                msg.style.color = "red";
+            });
+        }
+    </script>
+
+</body>
+</html>

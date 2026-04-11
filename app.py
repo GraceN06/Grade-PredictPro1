@@ -1519,6 +1519,61 @@ def show_users():
 
     return str([dict(user) for user in users])
 
+@app.route('/settings')
+def settings():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT username, email, role FROM users WHERE username = ?",
+        (session['username'],)
+    )
+    user = cursor.fetchone()
+    conn.close()
+
+    return render_template('settings.html', user=user)
+
+@app.route('/update-password', methods=['POST'])
+def update_password():
+    if 'username' not in session:
+        return jsonify({"message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    current_password = data.get('current_password', '').strip()
+    new_password = data.get('new_password', '').strip()
+    confirm_password = data.get('confirm_password', '').strip()
+
+    if not current_password or not new_password or not confirm_password:
+        return jsonify({"message": "All fields are required"}), 400
+
+    if new_password != confirm_password:
+        return jsonify({"message": "New passwords do not match"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM users WHERE username = ? AND password = ?",
+        (session['username'], current_password)
+    )
+    user = cursor.fetchone()
+
+    if not user:
+        conn.close()
+        return jsonify({"message": "Current password is incorrect"}), 400
+
+    cursor.execute(
+        "UPDATE users SET password = ? WHERE username = ?",
+        (new_password, session['username'])
+    )
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Password updated successfully"})
+
 @app.route('/')
 def home():
     return render_template('student_login.html')

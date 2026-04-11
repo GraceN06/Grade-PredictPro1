@@ -327,3 +327,8 @@ body.dark .collapsible:hover {
 .collapsible.active::after {
     content: '-';
 }
+
+#settingsMessage {
+    margin-top: 15px;
+    font-weight: bold;
+}
